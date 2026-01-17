@@ -5,9 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="32dp"
     tools:context=".ListaDeFichasActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/blk_background_wht_border"
+        android:gravity="center"
+        android:text="...FICHAS..."
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/blk_background_wht_border"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFichas"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:padding="8dp"
+            android:scrollbars="none"
+            tools:listitem="@layout/btn_selecao_de_ficha"
+            tools:ignore="NestedWeights" />
+
+        <ImageView
+            android:id="@+id/add_ficha"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="-4dp"
+            android:layout_marginBottom="-4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/outline_add_box_24" />
+    </LinearLayout>
 
 </LinearLayout>
