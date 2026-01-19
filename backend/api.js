@@ -1,17 +1,33 @@
 import express from 'express';
 import cors from 'cors';
+import { setupDb } from './database/db.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Status OK!');
-});
+// Rotas de autenticação
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 3000; 
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
-});
+const startServer = async () => {
+      // Inicializando banco de dados
+      await setupDb().catch(err => {
+          console.error("✖ Erro ao configurar o banco de dados:", err);
+          process.exit(1); 
+      });
+
+      // Rota de teste
+      app.get('/', (req, res) => {
+          res.send('Servidor PorTable Mobile - Status OK!');
+      });
+
+      app.listen(PORT, () => {
+          console.log(`Servidor rodando em: http://localhost:${PORT}`);
+      });
+};
+
+startServer();
