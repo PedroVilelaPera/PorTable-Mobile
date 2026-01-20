@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
+            android:gravity="center_vertical"
+            android:text="..\\"
+            android:textColor="#aaaaaa"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/edt_nome_barra"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
+            android:ellipsize="none"
+            android:hint="Nome da barra"
+            android:imeOptions="actionDone"
+            android:includeFontPadding="false"
+            android:inputType="textNoSuggestions|text"
+            android:maxLines="1"
+            android:padding="-2dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="0dp"
+            android:scrollbars="horizontal"
+            android:textColor="@color/white"
+            android:textColorHint="#666666" />
+
+        <ImageView
+            android:id="@+id/delete_barra_btn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@drawable/delete_btn" />
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+
+        <ProgressBar
+            android:id="@+id/progess_barr"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/custom_bar_rpg" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="10"
+            android:text="/"
+
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edt_min_barra"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:ellipsize="none"
+                android:gravity="center"
+                android:hint="MIN"
+                android:imeOptions="actionDone"
+                android:includeFontPadding="false"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:paddingVertical="0dp"
+                android:scrollbars="none"
+                android:textColor="@color/white"
+                android:textColorHint="#666666" />
+
+
+            <EditText
+                android:id="@+id/edt_max_barra"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:ellipsize="none"
+                android:gravity="center"
+                android:hint="MAX"
+                android:imeOptions="actionDone"
+                android:includeFontPadding="false"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:paddingVertical="0dp"
+                android:scrollbars="none"
+                android:textColor="@color/white"
+                android:textColorHint="#666666" />
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>
