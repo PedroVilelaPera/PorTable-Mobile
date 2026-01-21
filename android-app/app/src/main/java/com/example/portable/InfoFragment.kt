@@ -84,6 +84,8 @@ class InfoFragment : Fragment() {
             }
         }
 
+        binding.edtNomePersonagem.configurarEnterParaTirarFoco()
+
         // TODO: ---------------------------- BARRAS DO PERSONAGEM ----------------------------
 
         val listaDeBarras = activityMae?.fichaCompleta?.barras ?: mutableListOf()
@@ -191,22 +193,8 @@ class InfoFragment : Fragment() {
         // TODO: ---------------------------- GERENCIAMENTO DE FOCO ----------------------------
 
         binding.mainContainer.setOnClickListener {
-            activity.tirarFocoGeral();
+            activityMae?.tirarFocoGeral()
         }
-
-        val decorView = requireActivity().window.decorView
-        decorView.viewTreeObserver.addOnGlobalLayoutListener {
-            val rect = android.graphics.Rect()
-            decorView.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = decorView.rootView.height
-            val keypadHeight = screenHeight - rect.bottom
-
-            if (keypadHeight < screenHeight * 0.15) {
-                activity.tirarFocoGeral()
-            }
-        }
-
-        binding.edtNomePersonagem.configurarEnterParaTirarFoco()
     }
 
     override fun onDestroyView() {

@@ -22,7 +22,8 @@ class PericiasAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PericiaViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.pericia_layout, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.pericia_layout, parent, false)
         return PericiaViewHolder(view)
     }
 
@@ -36,7 +37,8 @@ class PericiasAdapter(
             if (!hasFocus) {
                 pericia.nome = holder.edtNome.text.toString().limparEspacosExtras()
 
-                val valorRaw = holder.edtValor.text.toString().replace(Regex("^0+(?!$)"), "").replace(Regex("[^0-9]"), "")
+                val valorRaw = holder.edtValor.text.toString().replace(Regex("^0+(?!$)"), "")
+                    .replace(Regex("[^0-9]"), "")
                 pericia.valor = valorRaw.toIntOrNull() ?: 0
 
                 holder.edtNome.setText(pericia.nome)

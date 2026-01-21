@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/blk_background_wht_border"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="18dp">
 
     <TextView
         android:id="@+id/dialog_title"
