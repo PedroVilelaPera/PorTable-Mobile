@@ -31,7 +31,7 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
             "",
             0,
             1,
-            mutableListOf(Barra("", 1, 1)),
+            mutableListOf(Barra("", 1, 2)),
             mutableListOf(Status("", 0)),
             mutableListOf(Pericia("", 0)),
             mutableListOf(Habilidade("","",""))

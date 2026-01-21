@@ -189,8 +189,8 @@
             android:nestedScrollingEnabled="false"
             android:paddingVertical="8dp"
             android:scrollbars="none"
-            tools:ignore="NestedWeights"
-            tools:listitem="@layout/status_layout" />
+            tools:ignore="NestedWeights" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
