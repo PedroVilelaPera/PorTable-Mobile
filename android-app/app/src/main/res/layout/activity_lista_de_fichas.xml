@@ -6,19 +6,35 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     android:orientation="vertical"
-    android:padding="32dp"
+    android:padding="16dp"
     tools:context=".ListaDeFichasActivity">
 
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@drawable/blk_background_wht_border"
-        android:gravity="center"
-        android:text="...FICHAS..."
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        tools:ignore="HardcodedText" />
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:text="...\\ FICHAS >..."
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/logout_btn"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/quit_btn" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,8 +51,8 @@
             android:clipToPadding="false"
             android:padding="8dp"
             android:scrollbars="none"
-            tools:listitem="@layout/btn_selecao_de_ficha"
-            tools:ignore="NestedWeights" />
+            tools:ignore="NestedWeights"
+            tools:listitem="@layout/btn_selecao_de_ficha" />
 
         <ImageView
             android:id="@+id/add_ficha"
@@ -45,6 +61,7 @@
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="-4dp"
             android:layout_marginBottom="-4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/outline_add_box_24" />
