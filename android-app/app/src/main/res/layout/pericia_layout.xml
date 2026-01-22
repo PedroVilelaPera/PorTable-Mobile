@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="4dp">
+
+    <ImageView
+        android:id="@+id/delete_pericia_btn"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="2dp"
+        android:src="@drawable/delete_btn" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
+        android:gravity="center_vertical"
+        android:text="..\\"
+        android:textColor="#aaaaaa"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/edt_nome_pericia"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:backgroundTint="@android:color/transparent"
+        android:ellipsize="none"
+        android:hint="Nome da pericia"
+        android:imeOptions="actionDone"
+        android:includeFontPadding="false"
+        android:inputType="textNoSuggestions|text"
+        android:maxLines="1"
+        android:padding="-2dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="0dp"
+        android:scrollbars="horizontal"
+        android:textColor="@color/white"
+        android:textColorHint="#666666" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical"
+        android:text=">"
+        android:textColor="#aaaaaa"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/edt_valor_pericia"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/blk_background_wht_border"
+        android:ellipsize="none"
+        android:gravity="center"
+        android:hint="00"
+        android:imeOptions="actionDone"
+        android:includeFontPadding="false"
+        android:inputType="numberDecimal"
+        android:maxLines="1"
+        android:paddingTop="4dp"
+        android:paddingBottom="0dp"
+        android:textColor="@color/white"
+        android:textColorHint="#666666" />
+
+</LinearLayout>
