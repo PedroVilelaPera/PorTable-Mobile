@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { setupDb } from './database/db.js';
 import authRoutes from './routes/authRoutes.js';
+import sheetsRoutes from './routes/sheetsRoutes.js';
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(express.json());
 
 // Rotas de autenticação
 app.use('/auth', authRoutes);
+app.use('/fichas', sheetsRoutes);
 
 const PORT = process.env.PORT || 3000; 
 
