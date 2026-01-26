@@ -14,10 +14,13 @@ export const login = async (req, res) => {
                 userId: user.id, 
                 nome: user.nome 
             });
+            console.log("✔ Usuário logado com sucesso:", email);
         } else {
             res.status(401).json({ success: false, message: "✖ Email ou senha incorretos." });
+            console.log("✖ Tentativa de login falhou para o email:", email);
         }
     } catch (error) {
         res.status(500).json({ success: false, message: "✖ Erro no servidor." });
+        console.log("✖ Erro ao processar login:", error);
     }
 };
