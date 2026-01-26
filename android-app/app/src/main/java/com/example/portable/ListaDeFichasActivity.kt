@@ -9,22 +9,29 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.portable.databinding.ActivityListaDeFichasBinding
+import com.example.portable.model.FichaResponse
+import com.example.portable.model.LoginResponse
+import com.google.gson.Gson
+import network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ListaDeFichasActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityListaDeFichasBinding
     private lateinit var listaFichas: ArrayList<FichaResumo>
+    private lateinit var fichaAdapter: FichaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListaDeFichasBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        listaFichas = intent.getParcelableArrayListExtra("LISTA_FICHAS") ?: arrayListOf(
-            FichaResumo(1, "ABEL"),
-            FichaResumo(2, "BELA"),
-            FichaResumo(3, "CAIN")
-        )
+        val idLogado = intent.getIntExtra("USER_ID", -1)
+
+        listaFichas = intent.getParcelableArrayListExtra("LISTA_FICHAS") ?: arrayListOf()
+
 
         binding.logoutBtn.setOnClickListener {
             exibirDialogLogout()
@@ -47,25 +54,13 @@ class ListaDeFichasActivity : AppCompatActivity() {
             Toast.makeText(this, "Criando Ficha...", Toast.LENGTH_SHORT).show()
         }
 
-        val fichaAdapter = FichaAdapter(
+        fichaAdapter = FichaAdapter(
             fichas = listaFichas,
-            onFichaClick = { id ->
-                Toast.makeText(this, "Abrindo ficha ...", Toast.LENGTH_SHORT).show()
+            onFichaClick = { idDaFichaClicada ->
+                // Por enquanto, apenas avisamos qual ID foi clicado
+                Toast.makeText(this, "Abrindo ficha de ID: $idDaFichaClicada", Toast.LENGTH_SHORT).show()
 
-                // TODO: TAREFA 2 - PUXAR FICHA DO BD
-
-                val id = 0 // PLACEHOLDER
-                val fichaCarregada = Ficha( // PLACEHOLDER
-                    id, "...", 0, 1,
-                    mutableListOf(Barra("...", 10, 10)),
-                    mutableListOf(Status("...", 10)),
-                    mutableListOf(Pericia("...", 2)),
-                    mutableListOf(Habilidade("...", "...", "..."))
-                )
-
-                val intent = Intent(this, SeccaoPrincipalFichaActivity::class.java)
-                intent.putExtra("FICHA_SELECIONADA", fichaCarregada)
-                startActivity(intent)
+                // TODO: Aqui no futuro faremos a chamada para buscar os detalhes da ficha $idDaFichaClicada
             },
             onDeleteClick = { idParaDeletar ->
                 exibirDialogDeletar(idParaDeletar)
@@ -75,8 +70,11 @@ class ListaDeFichasActivity : AppCompatActivity() {
         binding.recyclerViewFichas.apply {
             adapter = fichaAdapter
             layoutManager = LinearLayoutManager(this@ListaDeFichasActivity)
-
             itemAnimator = null
+        }
+
+        if (idLogado != -1) {
+            buscarFichas(idLogado)
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -86,6 +84,33 @@ class ListaDeFichasActivity : AppCompatActivity() {
         })
     }
 
+    private fun buscarFichas(usuario_id: Int) {
+        RetrofitClient.instance.getSheets(usuario_id).enqueue(object : Callback<List<FichaResponse>> {
+            override fun onResponse(call: Call<List<FichaResponse>>, response: Response<List<FichaResponse>>) {
+                if (response.isSuccessful) {
+                    val resBody = response.body()
+
+                    val gson = Gson()
+
+                    val fichasMapeadas = resBody?.map { ficha ->
+                        val map = gson.fromJson(ficha.dados_json, Map::class.java)
+                        val nomePersonagem = map["nome"]?.toString() ?: "Sem Nome"
+
+                        FichaResumo(ficha.id, nomePersonagem)
+                    } ?: emptyList()
+
+                    fichaAdapter.updateData(fichasMapeadas)
+
+                } else {
+                    exibirAvisoErro("ERRO NO SERVIDOR", "Falha ao carregar fichas. Tente mais tarde.")
+                }
+            }
+            override fun onFailure(call: Call<List<FichaResponse>>, t: Throwable) {
+                // Erro de conexão (Ip errado ou sem internet)
+                exibirAvisoErro("ERRO NA CONEXÃO", "Não foi possível alcançar o servidor. Verifique sua rede.")
+            }
+        })
+    }
     private fun exibirDialogLogout() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_custom, null)
         val dialog = AlertDialog.Builder(this)
