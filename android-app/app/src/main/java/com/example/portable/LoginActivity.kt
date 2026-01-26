@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.portable.databinding.ActivityLoginBinding
+import com.example.portable.exibirAvisoErro
 import com.example.portable.model.LoginRequest
 import com.example.portable.model.LoginResponse
 import network.RetrofitClient
@@ -85,16 +86,16 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     } else {
                         // Erro de credênciais
-                        exibirDialogLogout("!!! ERRO !!!", "E-mail ou senha incorretos.")
+                        exibirAvisoErro("!!! ERRO !!!", "E-mail ou senha incorretos.")
                     }
                 } else {
                     // Erro de Servidor (404 ou 500)
-                    exibirDialogLogout("ERRO NO SERVIDOR", "Ocorreu um problema técnico. Tente mais tarde.")
+                    exibirAvisoErro("ERRO NO SERVIDOR", "Ocorreu um problema técnico. Tente mais tarde.")
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 // Erro de conexão (Ip errado ou sem internet)
-                exibirDialogLogout("ERRO NA CONEXÃO", "Não foi possível alcançar o servidor. Verifique sua rede.")
+                exibirAvisoErro("ERRO NA CONEXÃO", "Não foi possível alcançar o servidor. Verifique sua rede.")
             }
         })
     }
@@ -109,31 +110,6 @@ class LoginActivity : AppCompatActivity() {
         }
         binding.edittextInputEmail.setOnFocusChangeListener(listener)
         binding.edittextInputSenha.setOnFocusChangeListener(listener)
-    }
-
-    private fun exibirDialogLogout(title: String, message: String) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_custom, null)
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .create()
-
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        dialogView.findViewById<TextView>(R.id.dialog_title).text = title
-        dialogView.findViewById<TextView>(R.id.dialog_message).text = message
-
-        // Esconde botão cancelar
-        val btnCancel = dialogView.findViewById<TextView>(R.id.btn_cancel)
-        btnCancel.visibility = View.GONE
-
-        // Modifica botão de confirmação para fechar o pop-up
-        val btnConfirm = dialogView.findViewById<TextView>(R.id.btn_confirm)
-        btnConfirm.text = "[ OK ]"
-        btnConfirm.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
 }
