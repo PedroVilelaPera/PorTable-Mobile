@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Ficha (
-    val id: Int,
+    var id: Int,
     var nome: String,
     var foto: Int,
     var nivel: Int,
