@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val resBody = response.body()
 
-                    if (resBody?.status == true) {
+                    if (resBody?.success == true) {
                         val intent = Intent(this@LoginActivity, ListaDeFichasActivity::class.java)
                         intent.putExtra("USER_ID", response.body()?.userId)
                         startActivity(intent)
