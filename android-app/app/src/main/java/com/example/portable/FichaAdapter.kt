@@ -33,4 +33,10 @@ class FichaAdapter(
     }
 
     override fun getItemCount() = fichas.size
+
+    fun updateData(newFichas: List<FichaResumo>) {
+        this.fichas.clear()
+        this.fichas.addAll(newFichas)
+        notifyDataSetChanged()
+    }
 }
