@@ -74,11 +74,28 @@ class ListaDeFichasActivity : AppCompatActivity() {
 
         fichaAdapter = FichaAdapter(
             fichas = listaFichas,
-            onFichaClick = { idDaFichaClicada ->
-                // Por enquanto, apenas avisamos qual ID foi clicado
-                Toast.makeText(this, "Abrindo ficha de ID: $idDaFichaClicada", Toast.LENGTH_SHORT).show()
+            onFichaClick = { idDaFicha ->
+                Toast.makeText(this, "Carregando detalhes...", Toast.LENGTH_SHORT).show()
 
-                // TODO: Aqui no futuro faremos a chamada para buscar os detalhes da ficha $idDaFichaClicada
+                RetrofitClient.instance.getSheet(idDaFicha).enqueue(object : Callback<FichaResponse>{
+                    override fun onResponse(call: Call<FichaResponse>, response: Response<FichaResponse>) {
+                        if (response.isSuccessful) {
+                            val resBody = response.body()
+                            val gson = Gson()
+
+                            val fichaCarregada = gson.fromJson(resBody?.dados_json, Ficha::class.java)
+
+                            fichaCarregada.id = resBody?.id ?: 0
+
+                            val intent = Intent(this@ListaDeFichasActivity, SeccaoPrincipalFichaActivity::class.java)
+                            intent.putExtra("FICHA_SELECIONADA", fichaCarregada)
+                            startActivity(intent)
+                        }
+                    }
+                    override fun onFailure(call: Call<FichaResponse>, t: Throwable) {
+                        exibirAvisoErro("ERRO DE CONEXÃO", "Não foi possível carregar a ficha no servidor.")
+                    }
+                })
             },
             onDeleteClick = { idParaDeletar ->
                 exibirDialogDeletar(idParaDeletar)
