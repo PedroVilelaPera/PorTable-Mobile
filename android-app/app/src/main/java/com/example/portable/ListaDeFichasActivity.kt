@@ -38,20 +38,38 @@ class ListaDeFichasActivity : AppCompatActivity() {
         }
 
         binding.addFicha.setOnClickListener {
+            val gson = Gson()
 
-            val id = 0 // PLACEHOLDER
-            val novaFichaVazia = Ficha(
-                id, "", 0, 1,
+            val novaFicha = Ficha(
+                0, "Novo Personagem", 0, 1,
                 mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf()
             )
 
-            // TODO: TAREFA 1 - CRIAR NOVA FICHA NO BD
+            val fichaParaEnviar = FichaResponse(
+                id = 0,
+                usuario_id = idLogado,
+                dados_json = gson.toJson(novaFicha)
+            )
 
-            val intent = Intent(this, SeccaoPrincipalFichaActivity::class.java)
-            intent.putExtra("FICHA_SELECIONADA", novaFichaVazia)
-            startActivity(intent)
+            RetrofitClient.instance.createSheet(fichaParaEnviar).enqueue(object : Callback<FichaResponse> {
+                override fun onResponse(call: Call<FichaResponse>, response: Response<FichaResponse>){
+                    if (response.isSuccessful){
+                        val fichaCriada = response.body()
 
-            Toast.makeText(this, "Criando Ficha...", Toast.LENGTH_SHORT).show()
+                        novaFicha.id = fichaCriada?.id ?: 0
+
+                        val intent = Intent(this@ListaDeFichasActivity, SeccaoPrincipalFichaActivity::class.java)
+                        intent.putExtra("FICHA_SELECIONADA", novaFicha)
+                        startActivity(intent)
+
+                        Toast.makeText(this@ListaDeFichasActivity, "Ficha salva com sucesso!", Toast.LENGTH_SHORT).show()
+                        buscarFichas(idLogado) // Recarrega a lista ao fundo
+                    }
+                }
+                override fun onFailure(call: Call<FichaResponse>, t: Throwable) {
+                    exibirAvisoErro("ERRO DE CONEXÃO", "Não foi possível criar a ficha no servidor.")
+                }
+            })
         }
 
         fichaAdapter = FichaAdapter(
@@ -95,7 +113,6 @@ class ListaDeFichasActivity : AppCompatActivity() {
                     val fichasMapeadas = resBody?.map { ficha ->
                         val map = gson.fromJson(ficha.dados_json, Map::class.java)
                         val nomePersonagem = map["nome"]?.toString() ?: "Sem Nome"
-
                         FichaResumo(ficha.id, nomePersonagem)
                     } ?: emptyList()
 
@@ -120,8 +137,7 @@ class ListaDeFichasActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<TextView>(R.id.dialog_title).text = "!!! SAIR !!!"
-        dialogView.findViewById<TextView>(R.id.dialog_message).text =
-            "Deseja encerrar a sessão e voltar para o login?"
+        dialogView.findViewById<TextView>(R.id.dialog_message).text = "Deseja encerrar a sessão e voltar para o login?"
 
         dialogView.findViewById<TextView>(R.id.btn_confirm).setOnClickListener {
             dialog.dismiss()
@@ -148,8 +164,7 @@ class ListaDeFichasActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<TextView>(R.id.dialog_title).text = "!!! DELETAR !!!"
-        dialogView.findViewById<TextView>(R.id.dialog_message).text =
-            "Tem certeza que deseja apagar esta ficha?"
+        dialogView.findViewById<TextView>(R.id.dialog_message).text = "Tem certeza que deseja apagar esta ficha?"
 
         dialogView.findViewById<TextView>(R.id.btn_confirm).setOnClickListener {
             val index = listaFichas.indexOfFirst { it.id == idParaDeletar }
