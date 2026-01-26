@@ -167,14 +167,21 @@ class ListaDeFichasActivity : AppCompatActivity() {
         dialogView.findViewById<TextView>(R.id.dialog_message).text = "Tem certeza que deseja apagar esta ficha?"
 
         dialogView.findViewById<TextView>(R.id.btn_confirm).setOnClickListener {
-            val index = listaFichas.indexOfFirst { it.id == idParaDeletar }
-            if (index != -1) {
-                listaFichas.removeAt(index)
-                binding.recyclerViewFichas.adapter?.notifyItemRemoved(index)
-                Toast.makeText(this, "Ficha deletada", Toast.LENGTH_SHORT).show()
-
-                // TODO: TAREFA 3 - REMOVER DO BANCO DE DADOS AQUI
-            }
+            RetrofitClient.instance.deleteSheet(idParaDeletar).enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        val index = listaFichas.indexOfFirst { it.id == idParaDeletar }
+                        if (index != -1) {
+                            listaFichas.removeAt(index)
+                            fichaAdapter.notifyItemRemoved(index)
+                            Toast.makeText(this@ListaDeFichasActivity, "Ficha eliminada!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    exibirAvisoErro("ERRO DE CONEXÃO", "Não foi possível carregar a ficha no servidor.")
+                }
+            })
             dialog.dismiss()
         }
 
