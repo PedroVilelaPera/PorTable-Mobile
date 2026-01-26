@@ -12,6 +12,6 @@ interface ApiService {
     @POST("auth/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
-    @GET("fichas/usuario/{usuario_id}")
+    @GET("fichas/{usuario_id}")
     fun getSheets(@Path("usuario_id") usuarioId: Int): Call<List<FichaResponse>>
 }
