@@ -62,3 +62,28 @@ export const getSheetById = async (req, res) => {
         console.log("✖ Erro ao buscar ficha:", error);
     }
 };
+
+export const updateSheet = async (req, res) => {
+    const { id } = req.params;
+    const { dados_json } = req.body;
+    
+    try {
+        const db = await getDatabase();
+        
+        // Executa a atualização baseada no ID único da ficha
+        const result = await db.run(
+            'UPDATE fichas SET dados_json = ? WHERE id = ?',
+            [dados_json, id]
+        );
+
+        if (result.changes > 0) {
+            console.log(`[LOG] Ficha ${id} atualizada com sucesso.`);
+            res.json({ message: "✔ Ficha atualizada com sucesso." });
+        } else {
+            res.status(404).json({ error: "✖ Ficha não encontrada para atualização." });
+        }
+    } catch (error) {
+        console.error("✖ Erro ao atualizar ficha:", error);
+        res.status(500).json({ error: "✖ Erro interno ao atualizar no banco." });
+    }
+};
