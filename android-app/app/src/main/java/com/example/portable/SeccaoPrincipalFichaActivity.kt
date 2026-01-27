@@ -7,10 +7,17 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.example.portable.databinding.ActivitySeccaoPrincipalFichaBinding
+import com.example.portable.model.FichaResponse
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
+import network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SeccaoPrincipalFichaActivity : AppCompatActivity() {
 
@@ -117,15 +124,11 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
     private fun finalizarESair() {
         tirarFocoGeral()
 
+        // Cancela qualquer salvamento pendente no Timer
         runnableSalvar?.let { handlerDebounce.removeCallbacks(it) }
-        executarSalvamentoReal()
 
-
-        val intent = android.content.Intent(this, ListaDeFichasActivity::class.java)
-        intent.flags = android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
-        startActivity(intent)
-
-        finish()
+        // Chama o salvamento real de forma que ele feche a activity ao terminar de salvar
+        executarSalvamentoReal(deveSairAoFinalizar = true)
     }
 
     fun tirarFocoGeral() {
@@ -148,21 +151,55 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
         handlerDebounce.postDelayed(runnableSalvar!!, 3500)
     }
 
-    private fun executarSalvamentoReal() {
+    private fun executarSalvamentoReal(deveSairAoFinalizar: Boolean = false) {
         val fichaAtual = fichaCompleta ?: return
         val fichaStringAtual = fichaAtual.toString()
 
-        if (fichaStringAtual == ultimaFichaSalva) return
-
-        binding.imgLoading.clearAnimation()
+        if (fichaStringAtual == ultimaFichaSalva) {
+            if (deveSairAoFinalizar) sairRealmente()
+            return
+        }
 
         binding.imgLoading.visibility = View.VISIBLE
         binding.imgLoading.startAnimation(animacaoGirar)
 
         ultimaFichaSalva = fichaStringAtual
+
+        ultimaFichaSalva = fichaStringAtual
         Log.d("BD_UPDATE", "$fichaAtual")
 
-        // TODO: LOGICA DE BD AQUI
+        val gson = Gson()
+        val request = FichaResponse(
+            id = fichaAtual.id,
+            usuario_id = LoginActivity.USUARIO_ID_SESSAO, // Usando sua variável de sessão
+            dados_json = gson.toJson(fichaAtual)
+        )
+
+        RetrofitClient.instance.updateSheet(fichaAtual.id, request).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (!isFinishing && !isDestroyed) {
+                    binding.imgLoading.clearAnimation()
+                    binding.imgLoading.visibility = View.INVISIBLE
+
+                    if (response.isSuccessful) {
+                        // Se o servidor confirmou, e o usuário quis sair, fechamos a tela
+                        if (deveSairAoFinalizar) sairRealmente()
+                    } else {
+                        Toast.makeText(this@SeccaoPrincipalFichaActivity, "Erro ao salvar no servidor", Toast.LENGTH_SHORT).show()
+                        if (deveSairAoFinalizar) sairRealmente()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                if (!isFinishing && !isDestroyed) {
+                    binding.imgLoading.clearAnimation()
+                    binding.imgLoading.visibility = View.INVISIBLE
+                    Toast.makeText(this@SeccaoPrincipalFichaActivity, "Falha na rede", Toast.LENGTH_SHORT).show()
+                    if (deveSairAoFinalizar) sairRealmente()
+                }
+            }
+        })
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (!isFinishing && !isDestroyed) {
