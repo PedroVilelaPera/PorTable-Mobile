@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -24,4 +25,7 @@ interface ApiService {
 
     @GET("fichas/id/{id}")
     fun getSheet(@Path("id") id: Int): Call<FichaResponse>
+
+    @PUT("fichas/{id}")
+    fun updateSheet(@Path("id") id: Int, @Body request: FichaResponse): Call<Void>
 }
