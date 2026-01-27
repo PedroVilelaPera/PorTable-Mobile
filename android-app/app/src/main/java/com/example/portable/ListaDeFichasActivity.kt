@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.portable.LoginActivity.Companion.USUARIO_ID_SESSAO
 import com.example.portable.databinding.ActivityListaDeFichasBinding
 import com.example.portable.model.FichaResponse
 import com.example.portable.model.LoginResponse
@@ -23,14 +24,20 @@ class ListaDeFichasActivity : AppCompatActivity() {
     private lateinit var listaFichas: ArrayList<FichaResumo>
     private lateinit var fichaAdapter: FichaAdapter
 
+    private var idLogado: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListaDeFichasBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val idLogado = intent.getIntExtra("USER_ID", -1)
+        val idVindoDoIntent = intent.getIntExtra("USER_ID", -1)
+        if (idVindoDoIntent != -1) {
+            USUARIO_ID_SESSAO = idVindoDoIntent
+        }
+        idLogado = USUARIO_ID_SESSAO
 
-        listaFichas = intent.getParcelableArrayListExtra("LISTA_FICHAS") ?: arrayListOf()
+        listaFichas = arrayListOf()
 
 
         binding.logoutBtn.setOnClickListener {
@@ -108,15 +115,18 @@ class ListaDeFichasActivity : AppCompatActivity() {
             itemAnimator = null
         }
 
-        if (idLogado != -1) {
-            buscarFichas(idLogado)
-        }
-
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 exibirDialogLogout()
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (idLogado != -1) {
+            buscarFichas(idLogado)
+        }
     }
 
     private fun buscarFichas(usuario_id: Int) {
@@ -130,6 +140,7 @@ class ListaDeFichasActivity : AppCompatActivity() {
                     val fichasMapeadas = resBody?.map { ficha ->
                         val map = gson.fromJson(ficha.dados_json, Map::class.java)
                         val nomePersonagem = map["nome"]?.toString() ?: "Sem Nome"
+                        println("DEBUG: Ficha encontrada -> $nomePersonagem")
                         FichaResumo(ficha.id, nomePersonagem)
                     } ?: emptyList()
 

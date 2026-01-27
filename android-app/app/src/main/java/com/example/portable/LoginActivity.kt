@@ -112,4 +112,7 @@ class LoginActivity : AppCompatActivity() {
         binding.edittextInputSenha.setOnFocusChangeListener(listener)
     }
 
+    companion object {
+        var USUARIO_ID_SESSAO: Int = -1
+    }
 }
