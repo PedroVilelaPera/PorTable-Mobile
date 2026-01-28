@@ -208,4 +208,11 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
             }
         }, 1500)
     }
+
+    private fun sairRealmente() {
+        val intent = android.content.Intent(this, ListaDeFichasActivity::class.java)
+        intent.flags = android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        finish()
+    }
 }
