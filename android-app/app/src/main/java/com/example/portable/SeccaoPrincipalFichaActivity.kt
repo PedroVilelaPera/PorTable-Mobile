@@ -39,14 +39,9 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra<Ficha>("FICHA_SELECIONADA")
         } ?: Ficha(
-            123456789,
-            "",
-            0,
-            1,
-            mutableListOf(Barra("", 1, 2)),
-            mutableListOf(Status("", 0)),
-            mutableListOf(Pericia("", 0)),
-            mutableListOf(Habilidade("", "", ""))
+            -1, // ID inválido por padrão
+            "", 0, 1,
+            mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf()
         )
 
         ultimaFichaSalva = fichaCompleta.toString()
@@ -153,6 +148,12 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
 
     private fun executarSalvamentoReal(deveSairAoFinalizar: Boolean = false) {
         val fichaAtual = fichaCompleta ?: return
+
+        if (fichaAtual.id == -1) {
+            if (deveSairAoFinalizar) sairRealmente()
+            return
+        }
+
         val fichaStringAtual = fichaAtual.toString()
 
         if (fichaStringAtual == ultimaFichaSalva) {
