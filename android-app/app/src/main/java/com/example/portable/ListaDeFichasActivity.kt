@@ -35,7 +35,7 @@ class ListaDeFichasActivity : AppCompatActivity() {
         if (idVindoDoIntent != -1) {
             USUARIO_ID_SESSAO = idVindoDoIntent
         }
-        idLogado = USUARIO_ID_SESSAO
+        idLogado = LoginActivity.USUARIO_ID_SESSAO
 
         listaFichas = arrayListOf()
 
