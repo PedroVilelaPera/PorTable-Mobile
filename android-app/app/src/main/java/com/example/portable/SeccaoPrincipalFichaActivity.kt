@@ -200,13 +200,6 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
                 }
             }
         })
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (!isFinishing && !isDestroyed) {
-                binding.imgLoading.clearAnimation()
-                binding.imgLoading.visibility = View.INVISIBLE
-            }
-        }, 1500)
     }
 
     private fun sairRealmente() {
