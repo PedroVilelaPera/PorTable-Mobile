@@ -183,6 +183,7 @@ class SeccaoPrincipalFichaActivity : AppCompatActivity() {
                     binding.imgLoading.visibility = View.INVISIBLE
 
                     if (response.isSuccessful) {
+                        ultimaFichaSalva = fichaStringAtual
                         // Se o servidor confirmou, e o usuário quis sair, fechamos a tela
                         if (deveSairAoFinalizar) sairRealmente()
                     } else {
