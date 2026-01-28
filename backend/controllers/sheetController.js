@@ -77,9 +77,10 @@ export const updateSheet = async (req, res) => {
         );
 
         if (result.changes > 0) {
-            console.log(`[LOG] Ficha ${id} atualizada com sucesso.`);
+            console.log(`✔ Ficha ${id} atualizada com sucesso.`);
             res.json({ message: "✔ Ficha atualizada com sucesso." });
         } else {
+            console.log(`✖ Ficha ${id} não encontrada para atualização.`);
             res.status(404).json({ error: "✖ Ficha não encontrada para atualização." });
         }
     } catch (error) {
