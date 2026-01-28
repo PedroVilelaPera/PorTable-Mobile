@@ -80,6 +80,8 @@ class LoginActivity : AppCompatActivity() {
                     val resBody = response.body()
 
                     if (resBody?.success == true) {
+                        USUARIO_ID_SESSAO = resBody.userId ?: -1
+
                         val intent = Intent(this@LoginActivity, ListaDeFichasActivity::class.java)
                         intent.putExtra("USER_ID", response.body()?.userId)
                         startActivity(intent)
